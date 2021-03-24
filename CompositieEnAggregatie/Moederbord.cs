@@ -45,7 +45,7 @@ namespace CompositieEnAggregatie
 
         public void VoegRamToe(Ram ram)
         {
-            if (rams != null)
+            if (rams == null)
             {
                 rams = new List<Ram>();
                 rams.Add(ram);

@@ -18,7 +18,7 @@ namespace CompositieEnAggregatie
             Oefeningen.Add("Politiek");
             Oefeningen.Add("Moederbord");
             Oefeningen.Add("Een eigen huis");
-            //Oefeningen.Add("RPG");
+            Oefeningen.Add("RPG");
 
             bool bExit = false;
             while (!bExit)
@@ -32,7 +32,7 @@ namespace CompositieEnAggregatie
                     case 2: Politiek(); break;
                     case 3: Moederbord(); break;
                     case 4: EenEigenHuis(); break;
-                    //case 5: RPG(); break;
+                    case 5: RPG(); break;
 
                     default:
                         break;
@@ -122,11 +122,91 @@ namespace CompositieEnAggregatie
 
             void RPG()
             {
-                Character player = new Character();
-                player.Hp_base = 100;
-                player.Gewicht = 0;
-                player.Naam = "Player";
-                //player.
+                List<string> dungeonNames = new List<string>();
+                dungeonNames = new List<string>();
+
+                //Console.WriteLine("Player rolls");
+                Player[] players = new Player[5];
+                for (int i = 0; i < players.GetLength(0); i++)
+                {
+                    players[i] = new Player("Player " + (i+1));
+                    Console.WriteLine(players[i].ShowFullStats()); ;
+                }
+
+                //Console.WriteLine("\nMonster rolls");
+
+                Monster[] monsters = new Monster[5];
+                for (int i = 0; i < monsters.GetLength(0); i++)
+                {
+                    monsters[i] = new Monster("Monster " + (i+1),i+1);
+                    Console.WriteLine(monsters[i].ShowFullStats()); 
+                }
+
+                //Console.WriteLine("\nDungeon rolls");
+
+                Room[] rooms = new Room[5];
+                for (int i = 0; i < rooms.GetLength(0); i++)
+                {
+                    rooms[i] = new Small_Room("Room " + (i + 1), i + 1);
+                    dungeonNames.Add(rooms[i].ShowFullStats() );
+                }
+                bool rpgExit = false;
+                int iDungeon;
+                Rnd rnd = new Rnd(1,5);
+                Player player = new Player();
+                Room currentRoom = new Room();
+                currentRoom = null;
+                player = null;
+                int playerRoll = -1;
+                string playerNaam = null;
+                while (!rpgExit)
+                {
+                    Console.Clear();
+                    if (playerRoll != -1)
+                    {
+                        players[playerRoll-1].Naam = playerNaam;
+                        player = players[playerRoll - 1];
+                    }
+                    if (player != null) player.ShowFullStats(true);
+                    Console.WriteLine("\nWelkom bij: R(andom) Playing Game\n");
+                    if (playerNaam == null)
+                    {
+                        playerNaam = InputStr("Uw naam: ");
+                        Console.Write("Your roll (press a key):");
+                        Console.ReadKey(true);
+                        Console.WriteLine(playerRoll = rnd.RandomNumber());
+                    } else
+                    {
+                        Console.WriteLine("Lang, lang geleden was er eens ...");
+                        Console.ReadKey(true);
+                        Console.WriteLine("een dungeon! Vol rommel.\n");
+                        Console.WriteLine("Welke dungeon wil je verkennen?\n");
+                        dungeonNames.Add("Exit");
+                        iDungeon = SelectMenu(false, dungeonNames.ToArray());
+                        switch (iDungeon)
+                        {
+                            case 1: break;
+                            case 2: break;
+                            case 3:break;
+                            case 4:break;
+                            case 5:break;
+                            case 6:rpgExit = true; break;
+                            default:
+                                break;
+                        }
+                        if (!rpgExit)
+                        {
+                            currentRoom = rooms[iDungeon - 1];
+                            currentRoom.ShowFullStats(true);
+                            Console.ReadKey(true);
+                        }
+                    }
+
+                    //Console.ReadKey(true);
+
+                }
+
+                Console.ReadKey();
             }
 
             int SelectMenu(bool clearScreen = true, params string[] menu)
